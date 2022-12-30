@@ -25,7 +25,7 @@ def american_odds_to_decimal(american_odds):
 def main():
     driver = webdriver.Chrome()
     driver.get('https://www.betonline.ag/sportsbook/soccer/epl/english-premier-league')
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(1)
 
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')

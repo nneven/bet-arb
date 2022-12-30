@@ -4,6 +4,7 @@ Description:
 """
 
 # Imports
+import itertools
 from tabulate import tabulate
 from betonline import BetOnline
 from bovada import Bovada
@@ -43,7 +44,29 @@ def main():
 
                 print('Game', game_count, ':', bet_online_soccer_games['Team 1'][i], 'vs', bet_online_soccer_games['Team 2'][i])
                 print(tabulate(table, headers=headers, tablefmt='simple_grid', numalign='right', floatfmt='.2f'))
+
+                odds = [[bet_online_soccer_games['Odds 1'][i], bovada_soccer_games['Odds 1'][j]],
+                        [bet_online_soccer_games['Odds 2'][i], bovada_soccer_games['Odds 2'][j]],
+                        [bet_online_soccer_games['Draw'][i], bovada_soccer_games['Draw'][j]]]
+
+                combinations = [comb for comb in itertools.product(*odds)]
+
+                implied_probs = []
+                for odd_comb in combinations:
+                    team1_prob = 1 / odd_comb[0]
+                    team2_prob = 1 / odd_comb[1]
+                    draw_prob = 1 / odd_comb[2]
+                    implied_prob = team1_prob + team2_prob + draw_prob
+                    implied_probs.append(implied_prob)
+
+                for idx, comb in enumerate(combinations):
+                    formatted_comb = [f'{odd:.2f}' for odd in comb]
+                    print(f'Combination {idx + 1}: {formatted_comb}, Implied Probability: {implied_probs[idx]:.2f}')
+
+                print(f'Best Combination: {combinations[implied_probs.index(min(implied_probs))]}, Lowest Implied Probability: {min(implied_probs):.2f}')
+
                 print()
+
 
 if __name__ == "__main__":
     main()

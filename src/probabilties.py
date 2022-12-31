@@ -23,25 +23,25 @@ from adapters.everygame import EveryGame
 # Main
 def main():
 
-    games = {}
+    bookie_dict = {}
 
     print()
     print('Bet Online')
     betonline = BetOnline()
-    games['BetOnline'] = betonline.get_sport('soccer')
-    print(games['BetOnline'])
+    bookie_dict['BetOnline'] = betonline.get_sport('soccer')
+    print(bookie_dict['BetOnline'])
 
     print()
     print('Bovada')
     bovada = Bovada()
-    games['Bovada'] = bovada.get_sport('soccer')
-    print(games['Bovada'])
+    bookie_dict['Bovada'] = bovada.get_sport('soccer')
+    print(bookie_dict['Bovada'])
 
     print()
     print('MyBookie')
     mybookie = MyBookie()
-    games['MyBookie'] = mybookie.get_sport('soccer')
-    print(games['MyBookie'])
+    bookie_dict['MyBookie'] = mybookie.get_sport('soccer')
+    print(bookie_dict['MyBookie'])
 
     # print()
     # print('EveryGame')
@@ -51,18 +51,18 @@ def main():
 
     print()
     matches_found = 0
-    max_bookie_key = max(games, key=lambda x: len(games[x]))
-    max_bookie_df = games[max_bookie_key]
+    max_bookie_key = max(bookie_dict, key=lambda bookie: len(bookie_dict[bookie]))
+    max_bookie_df = bookie_dict[max_bookie_key]
 
     for idx, game in max_bookie_df.iterrows():
         cluster = []
         cluster.append(game)
-        for bookie in games:
+        for bookie in bookie_dict:
             if bookie == max_bookie_key:
                 continue
-            bookie_df = games[bookie]
+            bookie_games_df = bookie_dict[bookie]
             # print(bookie)
-            for idx2, game2 in bookie_df.iterrows():
+            for idx2, game2 in bookie_games_df.iterrows():
                 # TODO: NEED CLEAN DATA
                 game1_team1 = game['Team 1'][0:4]
                 game1_team2 = game['Team 2'][0:4]
@@ -79,18 +79,18 @@ def main():
             matches_found += 1
             headers = ['', cluster[0]['Team 1'], cluster[0]['Team 2'], 'Draw']
             table = []
-            for bookie in cluster:
-                table.append([bookie['Bookie'], bookie['Odds 1'], bookie['Odds 2'], bookie['Draw']])
-            print('Game', matches_found, ':', cluster[0]['Team 1'], 'vs', cluster[0]['Team 2'])
-            # print(tabulate(table, headers=headers, tablefmt='simple_grid', numalign='right', floatfmt='.2f'))
+            for bookie_game in cluster:
+                table.append([bookie_game['Bookie'], bookie_game['Odds 1'], bookie_game['Odds 2'], bookie_game['Draw']])
+            print('Game', str(matches_found) + ':', cluster[0]['Team 1'], 'vs', cluster[0]['Team 2'])
+            print(tabulate(table, headers=headers, tablefmt='simple_grid', numalign='right', floatfmt='.2f'))
 
             team1_odds = []
             team2_odds = []
             draw_odds = []
-            for bookie in cluster:
-                team1_odds.append(bookie['Odds 1'])
-                team2_odds.append(bookie['Odds 2'])
-                draw_odds.append(bookie['Draw'])
+            for bookie_game in cluster:
+                team1_odds.append(bookie_game['Odds 1'])
+                team2_odds.append(bookie_game['Odds 2'])
+                draw_odds.append(bookie_game['Draw'])
 
             odds = [team1_odds, team2_odds, draw_odds]
             combinations = [comb for comb in itertools.product(*odds)]
@@ -107,8 +107,11 @@ def main():
             #     formatted_comb = [f'{odd:.2f}' for odd in comb]
             #     print(f'Combination {idx + 1}: {formatted_comb}, Implied Probability: {implied_probs[idx]:.2f}')
 
-            best_comb = np.round(combinations[implied_probs.index(min(implied_probs))], 2)
-            print(f'Best Bet: {best_comb}, Probability: {min(implied_probs):.2f}')
+            best_bet = []
+            for odd in combinations[np.argmin(implied_probs)]:
+                best_bet.append(float(f'{odd:.2f}'))
+
+            print(f'Best Bet: {best_bet}, Probability: {min(implied_probs):.2f}')
             print()
 
 

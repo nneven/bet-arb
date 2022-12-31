@@ -37,8 +37,8 @@ class Bovada:
 
             teams = game.find('div', class_='competitors')
             teams = teams.find_all('span', class_='name')
-            team1 = teams[0].text
-            team2 = teams[1].text
+            team1 = teams[0].text.strip()
+            team2 = teams[1].text.strip()
             # print('Game', idx + 1, ':', team1, 'vs', team2)
 
             odds = game.find_all('sp-three-way-vertical', class_='market-type')[1]

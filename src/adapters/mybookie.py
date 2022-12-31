@@ -38,8 +38,8 @@ class MyBookie:
             if (idx >= len(games) / 2):
                 break
 
-            team1 = game.find('div', class_='game-line__home-team').text
-            team2 = game.find('div', class_='game-line__visitor-team').text
+            team1 = game.find('div', class_='game-line__home-team').text.strip()
+            team2 = game.find('div', class_='game-line__visitor-team').text.strip()
             # print('Game', idx + 1, ':', team1, 'vs', team2)
 
             odds = game.find_all('button', class_='lines-odds')

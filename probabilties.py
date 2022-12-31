@@ -6,14 +6,16 @@ Description:
 # Imports
 import itertools
 import numpy as np
+
+# Global Variables
+
+
+# Classes
 from tabulate import tabulate
 from adapters.betonline import BetOnline
 from adapters.bovada import Bovada
 from adapters.mybookie import MyBookie
-
-# Global Variables
-
-# Classes
+from adapters.everygame import EveryGame
 
 # Functions
 
@@ -37,6 +39,12 @@ def main():
     mybookie = MyBookie()
     mybookie_soccer_games = mybookie.get_sport('soccer')
     print(mybookie_soccer_games)
+
+    print()
+    print('EveryGame')
+    everygame = EveryGame()
+    everygame_soccer_games = everygame.get_sport('soccer')
+    print(everygame_soccer_games)
 
     print()
     game_count = 0

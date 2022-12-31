@@ -1,6 +1,6 @@
 # Imports
-import utils.helper as helper
 import pandas as pd
+import utils.helper as helper
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from tabulate import tabulate
@@ -22,7 +22,7 @@ class MyBookie:
             print('Sport not supported.')
 
     def get_soccer(self):
-        data = pd.DataFrame(columns=['Team 1', 'Team 2', 'Odds 1', 'Odds 2', 'Draw'])
+        data = pd.DataFrame(columns=['Bookie', 'Team 1', 'Team 2', 'Odds 1', 'Odds 2', 'Draw'])
 
         self.driver.get('https://www.mybookie.ag/sportsbook/english-premier-league/')
         self.driver.implicitly_wait(8)
@@ -52,6 +52,6 @@ class MyBookie:
             # print('Total Implied Probability:', round(sum(implied_prob), 5))
             # print()
 
-            data = data.append({'Team 1': team1, 'Team 2': team2, 'Odds 1': odds1, 'Odds 2': odds2, 'Draw': odds3}, ignore_index=True)
+            data = data.append({'Bookie': 'MyBookie', 'Team 1': team1, 'Team 2': team2, 'Odds 1': odds1, 'Odds 2': odds2, 'Draw': odds3}, ignore_index=True)
 
         return data

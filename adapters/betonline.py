@@ -25,7 +25,7 @@ class BetOnline:
         data = pd.DataFrame(columns=['Team 1', 'Team 2', 'Odds 1', 'Odds 2', 'Draw'])
 
         self.driver.get('https://www.betonline.ag/sportsbook/soccer/epl/english-premier-league')
-        self.driver.implicitly_wait(1)
+        self.driver.implicitly_wait(8)
 
         html = self.driver.page_source
         soup = BeautifulSoup(html, 'html.parser')

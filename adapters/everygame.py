@@ -25,24 +25,9 @@ class EveryGame:
         data = pd.DataFrame(columns=['Team 1', 'Team 2', 'Odds 1', 'Odds 2', 'Draw'])
 
         self.driver.get('https://sports.everygame.eu/en/Bets/Soccer/English-Premier-League/923')
-        self.driver.implicitly_wait(8)
+        self.driver.implicitly_wait(64)
 
         html = self.driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
-
-        match_winner = soup.find_all('div', id='1')
-        games = match_winner.find_all('div', class_='onemarket tr')
-        print(games)
-
-        # print()
-        for idx, game in enumerate(games):
-
-            if (idx >= len(games) / 2):
-                break
-
-            team1 = game.find('div', class_='game-line__home-team').text
-            team2 = game.find('div', class_='game-line__visitor-team').text
-            # print('Game', idx + 1, ':', team1, 'vs', team2)
-
-            odds = game.find_all('button', class_='lines-odds')
-            odds1 = helper.american_to_decimal(odds[4].text.strip())
+        print(soup.prettify())
+        

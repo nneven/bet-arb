@@ -40,11 +40,11 @@ def main():
     mybookie_soccer_games = mybookie.get_sport('soccer')
     print(mybookie_soccer_games)
 
-    print()
-    print('EveryGame')
-    everygame = EveryGame()
-    everygame_soccer_games = everygame.get_sport('soccer')
-    print(everygame_soccer_games)
+    # print()
+    # print('EveryGame')
+    # everygame = EveryGame()
+    # everygame_soccer_games = everygame.get_sport('soccer')
+    # print(everygame_soccer_games)
 
     print()
     game_count = 0

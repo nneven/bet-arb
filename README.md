@@ -1,2 +1,8 @@
 # bet-arb
- arbitrage betting
+arbitrage betting
+
+BetOnline
+Bovada
+BetUS
+MyBookie
+EveryGame

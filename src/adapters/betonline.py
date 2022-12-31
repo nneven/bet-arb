@@ -1,5 +1,5 @@
 # Imports
-import helper
+import utils.helper as helper
 import pandas as pd
 from selenium import webdriver
 from bs4 import BeautifulSoup

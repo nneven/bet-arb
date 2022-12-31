@@ -22,6 +22,15 @@ from adapters.everygame import EveryGame
 # Main
 def main():
 
+    # while True:
+    #     user_input = input('What is your favorite color? ')
+    #     if user_input == 'blue':
+    #         print('Great choice!')
+    #     elif user_input == 'red':
+    #         print('That is a great color too!')
+    #     else:
+    #         print('Wow, that is a unique color!')
+
     print()
     print('Bet Online')
     betonline = BetOnline()
@@ -40,11 +49,11 @@ def main():
     mybookie_soccer_games = mybookie.get_sport('soccer')
     print(mybookie_soccer_games)
 
-    # print()
-    # print('EveryGame')
-    # everygame = EveryGame()
-    # everygame_soccer_games = everygame.get_sport('soccer')
-    # print(everygame_soccer_games)
+    print()
+    print('EveryGame')
+    everygame = EveryGame()
+    everygame_soccer_games = everygame.get_sport('soccer')
+    print(everygame_soccer_games)
 
     print()
     game_count = 0

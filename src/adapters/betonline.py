@@ -9,6 +9,15 @@ class BetOnline:
     def __init__(self):
         self.driver = webdriver.Chrome()
         self.sports = ['soccer']
+        self.urls = {
+            'soccer': [
+                'https://www.betonline.ag/sportsbook/soccer/epl/english-premier-league',
+                'https://www.betonline.ag/sportsbook/soccer/la-liga/spanish-la-liga',
+                'https://www.betonline.ag/sportsbook/soccer/serie-a/italian-serie-a',
+                'https://www.betonline.ag/sportsbook/soccer/bundesliga/german-bundesliga',
+                'https://www.betonline.ag/sportsbook/soccer/ligue-1/french-ligue-1'
+                ]
+            }
 
     def list_sports(self):
         print('BetOnline Sports:')
@@ -17,46 +26,53 @@ class BetOnline:
 
     def get_sport(self, sport):
         if sport == 'soccer':
-            return self.get_soccer()
+            return self.get_soccer(self.urls[sport])
+
         else:
             print('Sport not supported.')
 
-    def get_soccer(self):
-        data = pd.DataFrame(columns=['Bookie', 'Team 1', 'Team 2', 'Odds 1', 'Odds 2', 'Draw'])
+    def get_soccer(self, urls):
+        all_games = pd.DataFrame(columns=['Bookie', 'Team 1', 'Team 2', 'Odds 1', 'Odds 2', 'Draw'])
+        
+        for url in urls:
+            data = pd.DataFrame()
 
-        self.driver.get('https://www.betonline.ag/sportsbook/soccer/epl/english-premier-league')
-        self.driver.implicitly_wait(8)
+            self.driver.get(url)
+            self.driver.implicitly_wait(100)
 
-        html = self.driver.page_source
-        soup = BeautifulSoup(html, 'html.parser')
+            html = self.driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
 
-        game_dategroup = soup.find_all('div', class_='offering-games__dategroup ng-star-inserted')
+            game_dategroup = soup.find_all('div', class_='offering-games__dategroup ng-star-inserted')
 
-        # print()
-        for group in game_dategroup:
+            # print()
+            for group in game_dategroup:
 
-            games_table = group.find_all('table', class_='offering-games__table')
-            for idx, game in enumerate(games_table):
+                games_table = group.find_all('table', class_='offering-games__table')
+                for idx, game in enumerate(games_table):
 
-                teams = game.find_all('td', class_='lines-row__team-name')
-                if (len(teams) != 3):
-                    continue
-                
-                team1 = teams[0].span.text.strip()
-                team2 = teams[1].span.text.strip()
-                draw = teams[2].span.text.strip()
-                # print('Game', idx + 1, ':', team1, 'vs', team2)
+                    teams = game.find_all('td', class_='lines-row__team-name')
+                    if (len(teams) != 3):
+                        continue
+                    
+                    team1 = teams[0].span.text.strip()
+                    team2 = teams[1].span.text.strip()
+                    draw = teams[2].span.text.strip()
+                    # print('Game', idx + 1, ':', team1, 'vs', team2)
 
-                odds = game.find_all('td', class_='lines-row__money')
-                odds1 = helper.american_to_decimal(odds[0].text.strip())
-                odds2 = helper.american_to_decimal(odds[1].text.strip())
-                odds3 = helper.american_to_decimal(odds[2].text.strip())
-                # print(tabulate([[odds1, odds2, odds3]], headers=[team1, team2, draw], tablefmt='simple_grid'))
+                    odds = game.find_all('td', class_='lines-row__money')
+                    odds1 = helper.american_to_decimal(odds[0].text.strip())
+                    odds2 = helper.american_to_decimal(odds[1].text.strip())
+                    odds3 = helper.american_to_decimal(odds[2].text.strip())
+                    # print(tabulate([[odds1, odds2, odds3]], headers=[team1, team2, draw], tablefmt='simple_grid'))
 
-                implied_prob = [1 / odds1, 1 / odds2, 1 / odds3]
-                # print('Total Implied Probability:', round(sum(implied_prob), 5))
-                # print()
+                    implied_prob = [1 / odds1, 1 / odds2, 1 / odds3]
+                    # print('Total Implied Probability:', round(sum(implied_prob), 5))
+                    # print()
 
-                data = data.append({'Bookie': 'BetOnline', 'Team 1': team1, 'Team 2': team2, 'Odds 1': odds1, 'Odds 2': odds2, 'Draw': odds3}, ignore_index=True)
+                    data = data.append({'Bookie': 'BetOnline', 'Team 1': team1, 'Team 2': team2, 'Odds 1': odds1, 'Odds 2': odds2, 'Draw': odds3}, ignore_index=True)
 
-        return data
+            all_games = all_games.append(data, ignore_index=True)
+
+        return all_games
+        

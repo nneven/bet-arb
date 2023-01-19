@@ -1,13 +1,21 @@
 # Imports
+import time
+import random
 import pandas as pd
 import utils.helper as helper
+import undetected_chromedriver as uc
+
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from tabulate import tabulate
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class BetOnline:
     def __init__(self):
-        self.driver = webdriver.Chrome()
+        self.driver = uc.Chrome()
+        # self.driver = webdriver.Chrome()
         self.sports = ['soccer']
         self.urls = {
             'soccer': [
@@ -38,12 +46,12 @@ class BetOnline:
             data = pd.DataFrame()
 
             self.driver.get(url)
-            self.driver.implicitly_wait(100)
+            WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, 'offering-games__pagination')))
 
             html = self.driver.page_source
             soup = BeautifulSoup(html, 'html.parser')
 
-            game_dategroup = soup.find_all('div', class_='offering-games__dategroup ng-star-inserted')
+            game_dategroup = soup.find_all('div', class_='offering-games__dategroup')
 
             # print()
             for group in game_dategroup:
@@ -73,6 +81,7 @@ class BetOnline:
                     data = data.append({'Bookie': 'BetOnline', 'Team 1': team1, 'Team 2': team2, 'Odds 1': odds1, 'Odds 2': odds2, 'Draw': odds3}, ignore_index=True)
 
             all_games = all_games.append(data, ignore_index=True)
+            time.sleep(random.randint(1, 10))
 
         return all_games
         

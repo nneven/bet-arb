@@ -63,13 +63,20 @@ def main():
             bookie_games_df = bookie_dict[bookie]
             # print(bookie)
             for idx2, game2 in bookie_games_df.iterrows():
-                # TODO: NEED CLEAN DATA
-                game1_team1 = game['Team 1'][0:4]
-                game1_team2 = game['Team 2'][0:4]
-                game2_team1 = game2['Team 1'][0:4]
-                game2_team2 = game2['Team 2'][0:4]
 
-                if game1_team1 == game2_team1 and game1_team2 == game2_team2:
+                # game1_team1 = game['Team 1'][0:4]
+                # game1_team2 = game['Team 2'][0:4]
+                # game2_team1 = game2['Team 1'][0:4]
+                # game2_team2 = game2['Team 2'][0:4]
+                
+                team1_similarity = SequenceMatcher(None, game['Team 1'], game2['Team 1']).ratio()
+                team2_similarity = SequenceMatcher(None, game['Team 2'], game2['Team 2']).ratio()
+
+                # if game1_team1 == game2_team1 and game1_team2 == game2_team2:
+                #     cluster.append(game2)
+                #     break
+
+                if team1_similarity > 0.5 and team2_similarity > 0.5:
                     cluster.append(game2)
                     break
         
